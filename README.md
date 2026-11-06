@@ -1,33 +1,58 @@
-# Chat
+# Codicil
 
-The minimal agent-native starter app — a clean, ChatGPT-style shell with chat at
-the center, durable threads, standard app navigation, auth, live sync, and
-actions. Start here when you want a real browser app to build on without
-committing to a domain template.
+A codicil amends a will without rewriting it. Codicil does the same for client
+agreements: every change is a priced, approved, recorded amendment.
 
-**Live app: [chat.agent-native.com](https://chat.agent-native.com?utm_source=github&utm_medium=referral&utm_content=chat-readme)**
+**The problem:** clients keep adding "small" requests after the price is agreed,
+and freelancers end up doing the work for free.
 
-Chat is the basic agent-native app starting point. It gives you the app-agent
-loop wired end to end and one example action, so you can add your own UI, data,
-and actions on top.
+## What it does
 
-## Features
+- An agent compares a pasted client message with the agreed scope and classifies it
+  as **included**, **unclear** or **additional**, quoting the client's exact words.
+- Additional work is priced from the freelancer's own rate card. The AI never
+  invents a price; all totals are computed by code, in integer cents.
+- The freelancer approves the change. One all-or-nothing transaction creates a new
+  agreement version and adjusts the invoices. Paid invoices are never rewritten.
+  Approving twice is refused, so a retry cannot apply a change twice.
+- One private link per project shows the client the current agreement, payment
+  details and any pending change. The client accepts by typing any name they choose.
+  No email or ID is collected.
+- A printable evidence record lists the agreement, invoices, client requests and
+  acceptances, with a fingerprint that changes if the terms are altered.
+- Extras: revision counter, proposal expiry, invoice due dates with overdue
+  tracking, payer name and payment rail on the agreement (for crypto and
+  cross-border payments).
 
-- ChatGPT-style shell with a threads list and durable chat history.
-- Auth, live sync, and application state wired out of the box.
-- The action surface the agent and UI share, plus one example action to copy.
-- A minimal, brandable base for any domain app.
+## Honest limits
 
-## Develop locally
+Acceptance is recorded as "accepted electronically (typed name)". The signer's
+identity is not verified, and this is not a certified e-signature. Intake is
+paste-in only (no WhatsApp or email integration yet). No payment processing.
 
-Scaffold your own copy and run it:
+## How the agent and the app share one set of actions
 
-```bash
-npx --yes @agent-native/core@latest create my-app --standalone --template chat
-cd my-app
-corepack enable
-pnpm install
+Every read and write is an Agent-Native `defineAction`. The agent calls them, and
+so will every button in the UI. The agent can only *propose* a change; applying it
+requires an explicit approval. Rules such as "price only from the rate card" are
+enforced in code, not just in the prompt.
+
+## Run it locally
+
+```
+pnpm install --ignore-scripts
 pnpm dev
 ```
 
-Full docs: [agent-native.com/docs/template-chat](https://agent-native.com/docs/template-chat?utm_source=github&utm_medium=referral&utm_content=chat-readme).
+Add your own AI provider key in Settings (Anthropic, Google Gemini and Groq work),
+then say "Load the demo workspace" in the chat to see the Acme Studio example.
+
+## What was built for this hackathon
+
+Started from the Agent-Native "chat" template (scaffold, auth and chat shell).
+Everything specific to Codicil was written during the hackathon window: the
+database schema and migrations, the rate card, scope versions, the change-order
+engine, invoice adjustments, the agreement link and acceptance records, the
+evidence page, and the agent's instructions.
+
+Built for the Builder.io Agent-Native Hackathon.
